@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
+#include <cstdint>
 
 class Apple {
 public:
