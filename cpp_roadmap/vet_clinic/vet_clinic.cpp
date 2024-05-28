@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <stdexcept>
 
-int main() {
-    std::cout << "Welcome to the vet clinic! What can we help with?" << std::endl;
+#include <clinic_database.h>
 
+int main() {
+    // initialize stuff -> in reality it would be an actual database
+    ClinicDatabase db;
     bool stop = false;
     system("clear");
     
@@ -20,13 +22,20 @@ int main() {
         int operation;
         try {
             operation = std::stoi(input);
-        } catch (std::invalid_argument) {
+        } catch (std::invalid_argument const&) {
             system("clear");
             std::cout << "Please choose one of the available options!" << std::endl;
             continue;
         }
 
         switch(operation){
+            case 1: {
+                db.add_pet();
+                system("clear");
+            } break;
+            case 2: {
+                stop = true;
+            } break;
             case 3: {
                 stop = true;
             } break;

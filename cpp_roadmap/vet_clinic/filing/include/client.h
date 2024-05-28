@@ -1,20 +1,22 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include <Pet.h>
+#include <vector>
+
+#include <person.h>
 
 class Client : public Person {
 public:
     // get info
-    std::list<Pet> get_pets();
+    std::vector<Pet> get_pets();
 
     // change info
-    void add_pet(std::list<Pet> pet);
+    void add_pet(Pet pet);
     void remove_pet(int id);
-    void update_pet_info(std::list<Pet> new_pet_info);
+    void update_pet_info(Pet new_pet_info);
 
 private:
-std::list<Pet> pets_; 
+std::vector<Pet> pets_; 
 };
 
 #endif // CLIENT_H

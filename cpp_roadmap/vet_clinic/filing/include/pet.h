@@ -16,21 +16,22 @@ enum class PetType {
 
 enum class Sex {
     UNKNOWN = 0,
-    FEMALE = 1,
-    MALE= 2,
+    MALE= 1,
+    FEMALE = 2,
 };
 
 class Pet {
 public:
     // ************* figure out constructor *************
-    Pet(std::string name, PetType pet_type, Sex sex, time_t birth, double weight, IDManager& id_manager);
+    Pet(std::string name, PetType pet_type, Sex sex, double weight, IDManager& id_manager);
 
     // get info
     std::string get_name() {return name_;};
     int get_id() {return id_;};
     PetType get_pet_type() {return pet_type_;};
+    std::string get_pet_type_string();
     Sex get_sex() {return sex_;};
-    time_t get_birth() {return birth_;};
+    std::string get_sex_string();
     double get_weight() {return weight_;};
 
     // change info
@@ -42,7 +43,6 @@ private:
     int id_; // for simplicity's sake, we'll assume the clinic won't have lots of patients :)
     PetType pet_type_;
     Sex sex_;
-    time_t birth_;
     double weight_;
 };
 

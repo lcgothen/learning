@@ -6,7 +6,7 @@ class IDManager {
 public:
     int get_new_id() {
         next_id_++;
-        return next_id - 1;
+        return next_id_ - 1;
     };
 
 private:
