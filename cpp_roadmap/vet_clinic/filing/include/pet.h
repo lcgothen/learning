@@ -37,6 +37,7 @@ public:
     // change info
     void change_name(std::string new_name);
     void update_pet_weight(double weight);
+    void update_pet_sex(Sex sex);
 
 private:
     std::string name_;

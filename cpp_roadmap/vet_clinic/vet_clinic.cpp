@@ -4,6 +4,13 @@
 
 #include <clinic_database.h>
 
+void wait_and_clear() {
+    std::cout << "Press enter to continue" << std::endl;
+    std::string input;
+    std::getline( std::cin, input );
+    system("clear");
+}
+
 int main() {
     // initialize stuff -> in reality it would be an actual database
     ClinicDatabase db;
@@ -14,7 +21,8 @@ int main() {
         std::cout << "What can we help with?" << std::endl;
         std::cout << "1. Register new pet" << std::endl;
         std::cout << "2. Register new client" << std::endl;
-        std::cout << "3. Quit" << std::endl;
+        std::cout << "3. Go to management menu" << std::endl;
+        std::cout << "100. Quit" << std::endl;
 
         std::string input;
         std::getline( std::cin, input );
@@ -31,12 +39,16 @@ int main() {
         switch(operation){
             case 1: {
                 db.add_pet();
-                system("clear");
+                wait_and_clear();
             } break;
             case 2: {
-                stop = true;
+                db.add_client();
+                wait_and_clear();
             } break;
             case 3: {
+                stop = true;
+            } break;
+            case 100: {
                 stop = true;
             } break;
             default: {

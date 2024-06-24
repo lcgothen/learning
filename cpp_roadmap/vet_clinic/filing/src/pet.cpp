@@ -50,3 +50,7 @@ void Pet::change_name(std::string new_name) {
 void Pet::update_pet_weight(double weight) {
     weight_ = weight;
 }
+
+void Pet::update_pet_sex(Sex sex) {
+    sex_ = sex;
+}

@@ -1,7 +1,7 @@
 #ifndef CLINIC_DATABASE_H
 #define CLINIC_DATABASE_H
 
-#include <list>
+#include <vector>
 
 #include <pet.h>
 #include <client.h>
@@ -13,10 +13,11 @@ public:
 
     void add_pet();
 
+    void add_client();
+
 private:
-    std::list<Client> clients_;
-    std::list<Employee> employees_;
-    std::list<Pet> pets_; // this will disappear, as it should be associated with each client
+    std::vector<Client> clients_;
+    std::vector<Employee> employees_;
     IDManager client_id_manager_;
     IDManager employee_id_manager_;
     IDManager pet_id_manager_;

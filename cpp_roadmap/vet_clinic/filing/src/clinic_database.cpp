@@ -2,7 +2,33 @@
 
 #include <clinic_database.h>
 
-void ClinicDatabase::add_pet(){
+void ClinicDatabase::add_pet() {
+    // Client info
+    std::cout << "Input your ID:" << std::endl;
+    std::string client_id = "ID";
+    std::getline( std::cin, client_id );
+
+    int cliend_id_int;
+    try {
+        cliend_id_int = std::stoi(client_id);
+    } catch (std::invalid_argument const&) {
+        std::cout << "Invalid ID!" << std::endl;
+    }
+
+    // lookup client
+    int index = -1;
+    for(int i=0; i< static_cast<int>(clients_.size()); i++){
+        if (clients_[i].get_id() == cliend_id_int) {
+            index = i;
+            break;
+        }
+    }
+
+    if(index == -1) {
+        std::cout << "Couldn't find requested client! You should register yourself before your pet." << std::endl;
+        return;
+    }
+
     // name
     std::cout << "Input your pet's name:" << std::endl;
     std::string name = "name";
@@ -51,15 +77,29 @@ void ClinicDatabase::add_pet(){
         std::cout << "Please input a valid value!" << std::endl;
     }
 
-    pets_.emplace_back(Pet(name, pet_type, sex, weight, pet_id_manager_));
+    clients_[index].add_pet(Pet(name, pet_type, sex, weight, pet_id_manager_));
     system("clear");
-    std::cout << pets_.back().get_name() << " is registered!" << std::endl;
+    std::cout << name << " is registered to " << clients_[index].get_name() << "!" << std::endl;
+}
 
-    std::cout << "Name: " << pets_.back().get_name() << std::endl;
-    std::cout << "Animal Type: " << pets_.back().get_pet_type_string() << std::endl;
-    std::cout << "Sex: " << pets_.back().get_sex_string() << std::endl;
-    std::cout << "Weight: " << pets_.back().get_weight() << std::endl;
+void ClinicDatabase::add_client() {
+    // name
+    std::cout << "Input your name:" << std::endl;
+    std::string name = "name";
+    std::getline( std::cin, name );
 
-    std::cout << "Press enter to continue" << std::endl;
-    std::getline( std::cin, input );
+    // address
+    std::cout << "Input your address:" << std::endl;
+    std::string address = "address";
+    std::getline( std::cin, address );
+
+    // phone number
+    std::cout << "Input your phone number:" << std::endl;
+    std::string phone_number = "phone_number";
+    std::getline( std::cin, phone_number );
+
+    clients_.emplace_back(Client(name, address, phone_number, client_id_manager_));
+    system("clear");
+
+    std::cout << "You have been registered with ID " << clients_.back().get_id() << std::endl;
 }
