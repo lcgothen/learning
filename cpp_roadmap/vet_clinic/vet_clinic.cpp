@@ -47,6 +47,7 @@ int main() {
             } break;
             case 3: {
                 stop = true;
+                // same same as the other stuff, I'll move on from this example for now
             } break;
             case 100: {
                 stop = true;
