@@ -12,4 +12,4 @@ Unique pointers have exclusive ownership of the object they point to, so the obj
 
 With shared pointers, several can point to the same object. Only when all shared pointers to an object go out of scope, is the object deleted.
 
-Weak pointers are similar to shared pointers, but the object can be deleted before these pointers go out of scope, if all shared pointers to that object are out of scope. The memory blovk is only deallocated after all weak pointers have gone out of scope, so as to detetc safely if an object has been deleted.
+Weak pointers are similar to shared pointers, but the object can be deleted before these pointers go out of scope, if all shared pointers to that object are out of scope. The memory block is only deallocated after all weak pointers have gone out of scope, so as to detect safely if an object has been deleted.
