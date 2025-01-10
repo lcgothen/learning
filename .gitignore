@@ -1,6 +1,6 @@
 */bazel-*
 *.vscode
 *.idea
-*/bin/*
-*/obj/*
+**/bin/*
+**/obj/*
 
