@@ -1,6 +1,4 @@
 */bazel-*
 *.vscode
 *.idea
-*/bin
-*/obj
 
