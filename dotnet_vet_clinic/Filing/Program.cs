@@ -1,4 +1,4 @@
-using Filing.Models;
+using Filing.Implementation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+builder.Services.AddSingleton<IImplementation, Implementation>();
 
 var app = builder.Build();
 
