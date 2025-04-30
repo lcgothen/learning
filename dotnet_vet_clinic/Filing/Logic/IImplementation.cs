@@ -4,8 +4,8 @@ namespace Filing.Logic;
 
 public interface IImplementation
 {
-    bool AddClient(Client client);
+    ReturnCodes AddClient(Client client);
     Client? GetClientByPhoneNumber(string phoneNumber);
-    bool AddPet(string clientPhoneNumber, Pet pet);
+    ReturnCodes AddPet(string clientPhoneNumber, Pet pet);
     Pet? GetPetByChipNumber(string chipNumber);
 }

@@ -2,7 +2,6 @@ namespace Filing.Models;
 
 public class Pet(string chipNumber, string name, Pet.Type petType, double weight)
 {
-    // TODO get this type to be inserted as string
     public enum Type
     {
         Unknown = 0,

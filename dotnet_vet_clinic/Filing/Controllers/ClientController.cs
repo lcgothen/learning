@@ -14,16 +14,21 @@ public class ClientController(IImplementation implementation) : ControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public IActionResult Post([FromBody] Client request)
     {
-        var success = implementation.AddClient(request);
+        var ret = implementation.AddClient(request);
 
-        if (success)
+        switch (ret)
         {
-            var location = Url.Action(nameof(Post), new { id = request.PhoneNumber }) ??
-                           $"/{request.PhoneNumber}";
-            return Created(location, request);
+            case ReturnCodes.Conflict:
+                return Conflict("A customer with this phone number is already registered.");
+            case ReturnCodes.Success:
+                var location = Url.Action(nameof(Post), new { id = request.PhoneNumber }) ??
+                               $"/{request.PhoneNumber}";
+                return Created(location, request);
+            case ReturnCodes.NotFound:
+            case ReturnCodes.UnknownError:
+            default:
+                return Problem();
         }
-
-        return Conflict();
     }
 
     // GET api/client/{phoneNumber}
@@ -39,9 +44,10 @@ public class ClientController(IImplementation implementation) : ControllerBase
             return NotFound();
         }
 
+        var allPetsChipNumbers = client.GetAllPets();
         var pets = new List<Pet>();
 
-        foreach (var petChipNumber in client.GetAllPets())
+        foreach (var petChipNumber in allPetsChipNumbers)
         {
             var pet = implementation.GetPetByChipNumber(petChipNumber);
 

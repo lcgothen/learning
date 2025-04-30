@@ -22,17 +22,23 @@ public class PetController(IImplementation implementation) : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public IActionResult Post([FromBody] CreatePetRequest request)
     {
-        var success = implementation.AddPet(request.ClientPhoneNumber, request.PetInfo);
+        var ret = implementation.AddPet(request.ClientPhoneNumber, request.PetInfo);
 
-        if (success)
+        switch (ret)
         {
-            var location = Url.Action(nameof(Post), new { id = request.PetInfo.ChipNumber }) ??
-                           $"/{request.PetInfo.ChipNumber}";
-            return Created(location, request.PetInfo);
+            case ReturnCodes.Conflict:
+                return Conflict("A pet with this chip number is already registered.");
+            case ReturnCodes.NotFound:
+                return NotFound(
+                    "Customer with this phone number does not exist. Make sure to register as a customer before registering pets!");
+            case ReturnCodes.Success:
+                var location = Url.Action(nameof(Post), new { id = request.PetInfo.ChipNumber }) ??
+                               $"/{request.PetInfo.ChipNumber}";
+                return Created(location, request.PetInfo);
+            case ReturnCodes.UnknownError:
+            default:
+                return Problem();
         }
-
-        // TODO add better return codes once we can differentiate in the implementation return
-        return Problem();
     }
 
     // GET api/pet/{chipId}
@@ -43,11 +49,11 @@ public class PetController(IImplementation implementation) : ControllerBase
     {
         var pet = implementation.GetPetByChipNumber(chipNumber);
 
-        if (pet is not null)
+        if (pet is null)
         {
-            return Ok(pet);
+            return NotFound();
         }
 
-        return NotFound();
+        return Ok(pet);
     }
 }

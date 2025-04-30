@@ -8,16 +8,16 @@ public class Implementation : IImplementation
 
     private readonly List<Pet> _pets = new();
 
-    public bool AddClient(Client client)
+    public ReturnCodes AddClient(Client client)
     {
         var existingClient = _clients.Find(c => c.PhoneNumber == client.PhoneNumber);
         if (existingClient is not null)
         {
-            return false;
+            return ReturnCodes.Conflict;
         }
 
         _clients.Add(client);
-        return true;
+        return ReturnCodes.Success;
     }
 
     public Client? GetClientByPhoneNumber(string phoneNumber)
@@ -25,24 +25,24 @@ public class Implementation : IImplementation
         return _clients.Find(c => c.PhoneNumber == phoneNumber);
     }
 
-    public bool AddPet(string clientPhoneNumber, Pet pet)
+    public ReturnCodes AddPet(string clientPhoneNumber, Pet pet)
     {
         var client = _clients.Find(c => c.PhoneNumber == clientPhoneNumber);
         if (client is null)
         {
-            return false;
+            return ReturnCodes.NotFound;
         }
 
         var existingPet = _pets.Find(p => p.ChipNumber == pet.ChipNumber);
         if (existingPet is not null)
         {
-            return false;
+            return ReturnCodes.Conflict;
         }
 
         client.AddPet(pet.ChipNumber);
         _pets.Add(pet);
 
-        return true;
+        return ReturnCodes.Success;
     }
 
     public Pet? GetPetByChipNumber(string chipNumber)
