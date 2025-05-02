@@ -4,27 +4,27 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Filing.Controllers;
 
-[Route("api/client")]
+[Route("api/employee")]
 [ApiController]
-public class ClientController(IImplementation implementation) : ControllerBase
+public class EmployeeController(IImplementation implementation) : ControllerBase
 {
-    // POST api/client
+    // POST api/employee
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public IActionResult Post([FromBody] Client request)
+    public IActionResult Post([FromBody] Employee employee)
     {
-        var ret = implementation.AddClient(request);
+        var ret = implementation.AddEmployee(employee);
 
         switch (ret)
         {
             case ReturnCodes.Conflict:
-                return Conflict("A customer with this phone number is already registered.");
+                return Conflict("An employee with this phone number is already registered.");
             case ReturnCodes.Success:
-                var location = Url.Action(nameof(Post), new { id = request.PhoneNumber }) ??
-                               $"/{request.PhoneNumber}";
-                return Created(location, request);
+                var location = Url.Action(nameof(Post), new { id = employee.PhoneNumber }) ??
+                               $"/{employee.PhoneNumber}";
+                return Created(location, employee);
             case ReturnCodes.NotFound:
             case ReturnCodes.UnknownError:
             default:
@@ -32,52 +32,36 @@ public class ClientController(IImplementation implementation) : ControllerBase
         }
     }
 
-    // GET api/client/{phoneNumber}
+    // GET api/employee/{phoneNumber}
     [HttpGet("{phoneNumber}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public IActionResult Get(string phoneNumber)
     {
-        var client = implementation.GetClientByPhoneNumber(phoneNumber);
+        var employee = implementation.GetEmployeeByPhoneNumber(phoneNumber);
 
-        if (client is null)
+        if (employee is null)
         {
-            return NotFound("Customer with this phone number does not exist.");
+            return NotFound("Employee with this phone number does not exist.");
         }
 
-        var allPetsChipNumbers = client.GetAllPets();
-        var pets = new List<Pet>();
-
-        foreach (var petChipNumber in allPetsChipNumbers)
-        {
-            var pet = implementation.GetPetByChipNumber(petChipNumber);
-
-            if (pet is null)
-            {
-                // shouldn't happen as we got the chip number internally
-                return Problem();
-            }
-
-            pets.Add(pet);
-        }
-
-        return Ok(new GetClientResponse(client, pets));
+        return Ok(employee);
     }
 
-    // DELETE api/client/{phoneNumber}
+    // DELETE api/employee/{phoneNumber}
     [HttpDelete("{phoneNumber}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public IActionResult Delete(string phoneNumber)
     {
-        var ret = implementation.DeleteClient(phoneNumber);
+        var ret = implementation.DeleteEmployee(phoneNumber);
 
         switch (ret)
         {
             case ReturnCodes.NotFound:
-                return NotFound("Customer with this phone number does not exist.");
+                return NotFound("Employee with this phone number does not exist.");
             case ReturnCodes.Success:
                 return NoContent();
             case ReturnCodes.Conflict:

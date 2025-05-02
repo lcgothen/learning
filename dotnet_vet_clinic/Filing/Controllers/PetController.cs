@@ -19,6 +19,8 @@ public class PetController(IImplementation implementation) : ControllerBase
     // POST api/pet
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public IActionResult Post([FromBody] CreatePetRequest request)
     {
@@ -55,5 +57,27 @@ public class PetController(IImplementation implementation) : ControllerBase
         }
 
         return Ok(pet);
+    }
+
+    // DELETE api/pet/{chipId}
+    [HttpDelete("{chipNumber}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public IActionResult Delete(string chipNumber)
+    {
+        var ret = implementation.DeletePet(chipNumber);
+
+        switch (ret)
+        {
+            case ReturnCodes.NotFound:
+                return NotFound("Customer with this phone number does not exist.");
+            case ReturnCodes.Success:
+                return NoContent();
+            case ReturnCodes.Conflict:
+            case ReturnCodes.UnknownError:
+            default:
+                return Problem();
+        }
     }
 }

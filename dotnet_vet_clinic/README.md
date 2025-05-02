@@ -12,3 +12,5 @@ For a lack of imagination, I will take the vet clinic example I used in the C++ 
 - Visualize the registrations in the UI
 - Create some search function
 - Containerize to split up the application and the database
+- Create some calendar situation for booking
+- Login
