@@ -2,15 +2,6 @@
 
 For a lack of imagination, I will take the vet clinic example I used in the C++ Roadmap.
 
-## Plans
-1. Make the classes with no methods (skeleton)
-2. Add methods and a simple JSON API to register clients, employees and pets (in memory)
-3. Integrate with a database (possibly PostgreSQL) using the Entity Framework.
-4. Create a simple UI for registration (possibly using Blazor or React)
-
-## Possible expansions
-- Visualize the registrations in the UI
-- Create some search function
-- Containerize to split up the application and the database
-- Create some calendar situation for booking
-- Login
+Current features:
+- Simple API for creating, getting and deleting pets, clients and employees
+- In memory data
