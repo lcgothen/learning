@@ -8,6 +8,18 @@ public class Implementation : IImplementation
     private readonly List<Employee> _employees = new();
     private readonly List<Pet> _pets = new();
 
+    // Test stuff
+    private int currentCount=0;
+    public void IncrementCount()
+    {
+        currentCount++;
+    }
+
+    public int GetCount() {
+        return currentCount;
+    }
+    //////////////////////
+
     public ReturnCodes AddClient(Client client)
     {
         var existingClient = _clients.Find(c => c.PhoneNumber == client.PhoneNumber);

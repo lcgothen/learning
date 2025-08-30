@@ -1,0 +1,47 @@
+﻿@page "/client-registration"
+@using Filing.Logic
+@using Filing.Models
+@rendermode InteractiveServer
+@inject IImplementation ImplementationInstance
+
+<PageTitle>Client Registration</PageTitle>
+
+<h1>Client Registration</h1>
+
+@* <p role="status">Current count: @ImplementationInstance.GetCount()</p>
+
+<button class="btn btn-primary" @onclick="@ImplementationInstance.IncrementCount">Click me</button> *@
+
+<form method="post" @onsubmit="@Submit" @formname="client-registration-form">
+    <AntiforgeryToken />
+    <div>Full Name: </div>
+    <div>
+        <label>
+            <InputText @bind-Value="client.Name" />
+        </label>
+    </div>
+    <div>Address: </div>
+    <div >
+        <label>
+            <InputText @bind-Value="client.Address" />
+        </label>
+    </div>
+    <div>Phone Number:  </div>
+    <div>
+        <label>
+            <InputText @bind-Value="client.PhoneNumber" />
+        </label>
+    </div>
+    <div style="margin-top:10px;">
+        <button type="submit">Submit</button>
+    </div>
+</form>
+
+@code {
+    public Client client = new Client("", "", "");
+
+    public void Submit() {
+        ImplementationInstance.AddClient(client);
+        client = new Client("", "", "");
+    }
+}
