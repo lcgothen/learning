@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Filing.Logic;
+using Filing.BlazorComponents;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,10 @@ builder.Services.AddControllers().AddJsonOptions(option =>
 });
 builder.Services.AddSingleton<IImplementation, Implementation>();
 
+// Add blazor
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -22,6 +27,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 app.MapControllers();
+
+// UI stuff
+app.UseRouting();
+app.UseAntiforgery();
+app.MapStaticAssets();
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
+
 app.Run();

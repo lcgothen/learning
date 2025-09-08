@@ -77,7 +77,7 @@ public class Implementation : IImplementation
 
     public ReturnCodes AddEmployee(Employee employee)
     {
-        var existingEmployee = _clients.Find(e => e.PhoneNumber == employee.PhoneNumber);
+        var existingEmployee = _employees.Find(e => e.PhoneNumber == employee.PhoneNumber);
         if (existingEmployee is not null)
         {
             return ReturnCodes.Conflict;
@@ -94,7 +94,7 @@ public class Implementation : IImplementation
 
     public ReturnCodes DeleteEmployee(string phoneNumber)
     {
-        var nDeleted = _clients.RemoveAll(c => c.PhoneNumber == phoneNumber);
+        var nDeleted = _employees.RemoveAll(c => c.PhoneNumber == phoneNumber);
 
         return nDeleted == 0 ? ReturnCodes.NotFound : ReturnCodes.Success;
     }

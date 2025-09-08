@@ -1,0 +1,82 @@
+﻿@page "/employee-registration"
+@using Filing.Logic
+@using Filing.Models
+@rendermode InteractiveServer
+@inject IImplementation ImplementationInstance
+
+<PageTitle>Employee Registration</PageTitle>
+
+<h1>Employee Registration</h1>
+
+@if (!success) {
+    <form method="post" @onsubmit="@Submit" @formname="employee-registration-form">
+        <AntiforgeryToken />
+        <div>Full Name: </div>
+        <div>
+            <label>
+                <InputText @bind-Value="employee.Name" />
+            </label>
+        </div>
+        <div>Address: </div>
+        <div >
+            <label>
+                <InputText @bind-Value="employee.Address" />
+            </label>
+        </div>
+        <div>Phone Number:  </div>
+        <div>
+            <label>
+                <InputText @bind-Value="employee.PhoneNumber" />
+            </label>
+        </div>
+        @if(!String.IsNullOrEmpty(message)) {
+            <div class="error-message" style="margin-top:10px;">@message</div>
+        }
+        <div style="margin-top:10px;">
+            <button class="btn btn-primary" type="submit">Submit</button>
+            <button class="btn btn-secondary" type="button" @onclick="@Reset">Clear</button>
+        </div>
+    </form>
+    
+}
+else {
+    <div class="success-message"> Successfully registered new employee! </div>
+    <div class="receipt">
+        <div>Full Name: @employee.Name</div>
+        <div>Address: @employee.Address</div>
+        <div>Phone Number: @employee.PhoneNumber</div>
+    </div>
+    <div style="margin-top:10px;">
+        <button class="btn btn-primary" @onclick="@Reset">New registration</button>
+    </div>
+}
+
+@code {
+    public Employee employee = new Employee("", "", "");
+    public string message = "";
+    public bool success = false;
+
+    public void Submit() {
+        var result = ImplementationInstance.AddEmployee(employee);
+
+        switch(result) {
+            case ReturnCodes.Success: {
+                success = true;
+            } break;
+            case ReturnCodes.Conflict: {
+                message = "An employee with this phone number is already registered.";
+            } break;
+            case ReturnCodes.NotFound:
+            case ReturnCodes.UnknownError:
+            default: {
+                message = "Unknown error ocurred.";
+            } break;
+        }
+    }
+
+    public void Reset() {
+        message = "";
+        success = false;
+        employee = new Employee("", "", "");
+    }
+}
