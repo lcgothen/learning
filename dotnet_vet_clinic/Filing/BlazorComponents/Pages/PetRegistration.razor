@@ -1,0 +1,154 @@
+﻿@page "/pet-registration"
+@using Filing.Logic
+@using Filing.Models
+@rendermode InteractiveServer
+@inject IImplementation ImplementationInstance
+
+<PageTitle>Pet Registration</PageTitle>
+
+<h1>Pet Registration</h1>
+
+@if (!foundClient) {
+    <form method="post" @onsubmit="@SubmitClient" @formname="find-client-form">
+        <AntiforgeryToken />
+        <div>Client Phone Number: </div>
+        <div>
+            <label>
+                <InputText @bind-Value="phoneNumber" />
+            </label>
+        </div>
+        @if(!String.IsNullOrEmpty(message)) {
+            <div class="error-message" style="margin-top:10px;">@message</div>
+        }
+        <div style="margin-top:10px;">
+            <button class="btn btn-primary" type="submit">Submit</button>
+            <button class="btn btn-secondary" type="button" @onclick="@Reset">Clear</button>
+        </div>
+    </form>
+    
+}
+else {
+    @if (!success) {
+        <form method="post" @onsubmit="@SubmitPet" @formname="pet-registration-form">
+            <AntiforgeryToken />
+            <div>Chip Number: </div>
+            <div>
+                <label>
+                    <InputText @bind-Value="chipNumber" />
+                </label>
+            </div>
+            <div>Name: </div>
+            <div>
+                <label>
+                    <InputText @bind-Value="pet.Name" />
+                </label>
+            </div>
+            <div>Type: </div>
+            <div>
+                <InputSelect @bind-Value="pet.PetType">
+                <option value="">
+                    Select classification ...
+                </option>
+                <option checked="@(pet.PetType == Pet.Type.Cat)" 
+                    value="Cat">
+                    Cat
+                </option>
+                <option checked="@(pet.PetType == Pet.Type.Dog)" 
+                    value="Dog">
+                    Dog
+                </option>
+                <option checked="@(pet.PetType == Pet.Type.Rabbit)" 
+                    value="Rabbit">
+                    Rabbit
+                </option>
+                <option checked="@(pet!.PetType == Pet.Type.Snake)" 
+                    value="Snake">
+                    Snake
+                </option>
+                <option checked="@(pet.PetType == Pet.Type.Lizard)" 
+                    value="Lizard">
+                    Lizard
+                </option>
+            </InputSelect>
+            </div>
+            <div>Weight: </div>
+            <div>
+                <label>
+                    <InputNumber @bind-Value="pet.Weight" />
+                </label>
+            </div>
+            @if(!String.IsNullOrEmpty(message)) {
+                <div class="error-message" style="margin-top:10px;">@message</div>
+            }
+            <div style="margin-top:10px;">
+                <button class="btn btn-primary" type="submit">Submit</button>
+                <button class="btn btn-secondary" type="button" @onclick="@Reset">Clear</button>
+            </div>
+        </form>
+        
+    }
+    else {
+        <div class="success-message"> Successfully registered new pet! </div>
+        <div class="receipt">
+            <div>Client: @client.Name</div>
+            <div>Chip Number: @chipNumber</div>
+            <div>Name: @pet.Name</div>
+            <div>Type: @pet.PetType.ToString()</div>
+            <div>Weight: @pet.Weight</div>
+        </div>
+        <div style="margin-top:10px;">
+            <button class="btn btn-primary" @onclick="@Reset">New registration</button>
+        </div>
+    }
+}
+
+@code {
+    public string phoneNumber = "";
+    public string chipNumber = "";
+    public Pet pet = new Pet("", "", Pet.Type.Unknown, 0);
+    public Client client = new Client("", "", "");
+    public string message = "";
+    public bool success = false;
+    public bool foundClient = false;
+
+    public void SubmitClient() {
+        var res = ImplementationInstance.GetClientByPhoneNumber(phoneNumber);
+
+        if(res is null) {
+            message = "Customer with this phone number does not exist. Make sure to register as a customer before registering pets!";
+        }
+        else {
+            client = res;
+            message = "";
+            foundClient = true;
+        }
+    }
+
+    public void SubmitPet() {
+        var result = ImplementationInstance.AddPet(phoneNumber, new Pet(chipNumber, pet.Name, pet.PetType, pet.Weight));
+
+        switch(result) {
+            case ReturnCodes.Success: {
+                success = true;
+            } break;
+            case ReturnCodes.Conflict: {
+                message = "A pet with this chip number is already registered.";
+            } break;
+            case ReturnCodes.NotFound:
+            case ReturnCodes.UnknownError:
+            default: {
+                message = "Unknown error ocurred.";
+            } break;
+        }
+    }
+
+    public void Reset() {
+        message = "";
+        success = false;
+        pet = new Pet("", "", Pet.Type.Unknown, 0);
+        phoneNumber = "";
+        foundClient = false;
+        client = new Client("", "", "");
+        chipNumber = "";
+    }
+}

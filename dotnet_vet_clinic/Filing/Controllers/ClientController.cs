@@ -20,7 +20,7 @@ public class ClientController(IImplementation implementation) : ControllerBase
         switch (ret)
         {
             case ReturnCodes.Conflict:
-                return Conflict("A customer with this phone number is already registered.");
+                return Conflict("A client with this phone number is already registered.");
             case ReturnCodes.Success:
                 var location = Url.Action(nameof(Post), new { id = request.PhoneNumber }) ??
                                $"/{request.PhoneNumber}";

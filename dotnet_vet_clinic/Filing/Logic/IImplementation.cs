@@ -4,8 +4,6 @@ namespace Filing.Logic;
 
 public interface IImplementation
 {
-    void IncrementCount();
-    int GetCount();
     ReturnCodes AddClient(Client client);
     Client? GetClientByPhoneNumber(string phoneNumber);
     ReturnCodes DeleteClient(string phoneNumber);

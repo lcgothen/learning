@@ -8,18 +8,6 @@ public class Implementation : IImplementation
     private readonly List<Employee> _employees = new();
     private readonly List<Pet> _pets = new();
 
-    // Test stuff
-    private int currentCount=0;
-    public void IncrementCount()
-    {
-        currentCount++;
-    }
-
-    public int GetCount() {
-        return currentCount;
-    }
-    //////////////////////
-
     public ReturnCodes AddClient(Client client)
     {
         var existingClient = _clients.Find(c => c.PhoneNumber == client.PhoneNumber);
@@ -89,7 +77,7 @@ public class Implementation : IImplementation
 
     public ReturnCodes AddEmployee(Employee employee)
     {
-        var existingEmployee = _clients.Find(e => e.PhoneNumber == employee.PhoneNumber);
+        var existingEmployee = _employees.Find(e => e.PhoneNumber == employee.PhoneNumber);
         if (existingEmployee is not null)
         {
             return ReturnCodes.Conflict;
@@ -106,7 +94,7 @@ public class Implementation : IImplementation
 
     public ReturnCodes DeleteEmployee(string phoneNumber)
     {
-        var nDeleted = _clients.RemoveAll(c => c.PhoneNumber == phoneNumber);
+        var nDeleted = _employees.RemoveAll(c => c.PhoneNumber == phoneNumber);
 
         return nDeleted == 0 ? ReturnCodes.NotFound : ReturnCodes.Success;
     }
